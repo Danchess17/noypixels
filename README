@@ -1,0 +1,10 @@
+dependencies:
+    premake5            -- built in project
+    stbi+stbi_write     -- built in project
+    yaml-cpp            -- run "apt install libyaml-cpp-dev"
+
+build:
+    dep/premake5 gmake && make config=release noypixels
+
+run:
+    bin/Release/noypixels
