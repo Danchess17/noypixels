@@ -36,7 +36,7 @@ public:
     Serializer(Project& project);
 
     void serialize(const char* png, const char* json) const;
-    void deserialize(const char* png, const char* json);
+    void deserialize(const char* json);
 private:
     void putSprite(SerializerImageBuffer& im, YAML::Emitter& out, const Sprite& s) const;
     void getFrame(SerializerImage& im, const YAML::Node& data, Sprite& s);

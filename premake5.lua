@@ -18,9 +18,15 @@ project "noypixels"
     kind "ConsoleApp"
     language "C++"
     files { "src/**.cpp" }
-    links { "stb", "yaml-cpp" }
+    links { "stb", "imgui", "GL", "SDL2", "yaml-cpp" }
 
 project "stb"
     kind "StaticLib"
     language "C++"
     files { "vendor/stb/**.cpp" }
+
+project "imgui"
+    kind "StaticLib"
+    language "C++"
+    files { "vendor/imgui/**.cpp" }
+    includedirs { "include/imgui", "include/imgui/impl" }

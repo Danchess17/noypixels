@@ -85,6 +85,7 @@ void Serializer::serialize(const char* png, const char* json) const
 
     SerializerImageBuffer im(w * 2, 0xffff00ff);
     out << YAML::DoubleQuoted << YAML::Flow << YAML::BeginMap;
+    out << "spritesheet" << png << "sprites" << YAML::BeginMap;
 
     for (const auto& s : project)
     {
@@ -92,21 +93,28 @@ void Serializer::serialize(const char* png, const char* json) const
         putSprite(im, out, s.second);
     }
 
-    out << YAML::EndMap;
+    out << YAML::EndMap << YAML::EndMap;
     std::ofstream os(json);
     os << out.c_str();
     im.flush(png);
 }
 
-void Serializer::deserialize(const char* png, const char* json)
+void Serializer::deserialize(const char* json)
 {
     project.clear();
+
+    if (!json)
+        return;
+
     YAML::Node data = YAML::LoadFile(json);
     SerializerImage im;
     int ch;
-    im.data = (u32*)stbi_load(png, (int*)&im.w, (int*)&im.h, &ch, 0);
 
-    for(YAML::const_iterator it = data.begin(); it != data.end(); ++it)
+    std::string png = data["spritesheet"].as<std::string>();
+
+    im.data = (u32*)stbi_load(png.c_str(), (int*)&im.w, (int*)&im.h, &ch, 0);
+    
+    for(YAML::const_iterator it = data["sprites"].begin(); it != data["sprites"].end(); ++it)
     {
         Sprite& s = project.newSprite(it->first.as<std::string>(), it->second["width"].as<u32>(), it->second["height"].as<u32>());
         if (it->second["frames"])
