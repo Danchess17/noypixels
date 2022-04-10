@@ -21,6 +21,7 @@
     
 ***build***:  
     dep/premake5 gmake && make config=release noypixels  
+    
 ***run***:  
     bin/Release/noypixels  
     
