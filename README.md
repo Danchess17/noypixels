@@ -11,7 +11,7 @@
 Также была добавлена обновленная версия UML диаграммы с png-интерпретацией.  
 #### Обновлённые зависимости и инструкции:  
 
-dependencies:  
+***dependencies***:  
     premake5            -- built in project  
     stb_image           -- built in project  
     imgui               -- built in project  
@@ -19,9 +19,9 @@ dependencies:
     sdl2                -- run "apt install libsdl2-dev" for ubuntu  
     opengl3             -- run "apt install libgl-dev" for ubuntu  
     
-build:  
+***build***:  
     dep/premake5 gmake && make config=release noypixels  
-run:  
+***run***:  
     bin/Release/noypixels  
     
  
