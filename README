@@ -7,7 +7,8 @@ dependencies:
     opengl3             -- run "apt install libgl-dev" for ubuntu
     
 build:
-    dep/premake5 gmake && make config=release noypixels
+    linux: dep/premake5 gmake && make config=release noypixels
+    windows: dep/premake5.exe gmake && make config=release noypixels
 
 run:
     bin/Release/noypixels

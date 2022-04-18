@@ -1,6 +1,7 @@
 objdir "bin/obj/%{cfg.buildcfg}/%{prj.name}"
 targetdir "bin/%{cfg.buildcfg}"
-includedirs { "include" }
+includedirs { "include", "dep/windows/include" }
+libdirs { "dep/windows/lib" }
 
 filter "configurations:Debug"
     symbols "On"
@@ -18,7 +19,8 @@ project "noypixels"
     kind "ConsoleApp"
     language "C++"
     files { "src/**.cpp" }
-    links { "stb", "imgui", "GL", "SDL2", "yaml-cpp" }
+    defines { "SDL_MAIN_HANDLED" }
+    links { "stb", "imgui", "SDL2", "SDL2main", "yaml-cpp" , "opengl32", "glu32", "Gdi32", "winmm", "cfgmgr32", "Ole32", "Imm32", "OleAut32", "Version", "Setupapi", "Comdlg32" }
 
 project "stb"
     kind "StaticLib"

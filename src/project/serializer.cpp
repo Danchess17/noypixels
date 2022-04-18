@@ -111,7 +111,7 @@ void Serializer::deserialize(const std::string& json)
     SerializerImage im;
     int ch;
 
-    std::string png = data["spritesheet"].as<std::string>();
+    std::string png = json + ".png";
 
     im.data = (u32*)stbi_load(png.c_str(), (int*)&im.w, (int*)&im.h, &ch, 0);
     
