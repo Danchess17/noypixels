@@ -7,6 +7,9 @@
 #include <cstdlib>
 #include <string>
 #include <cstring>
+#include <optional>
+#include <list>
+#include <memory>
 
 typedef signed char s8;
 typedef signed short s16;
@@ -38,3 +41,4 @@ typedef double f64;
 #include "serializer.h"
 
 #include "graphics.h"
+#include "platform.h"

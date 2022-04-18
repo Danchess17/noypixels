@@ -11,3 +11,12 @@ build:
 
 run:
     bin/Release/noypixels
+
+history:
+    - frame auto-save
+    - animations
+    - color copier
+    - move cursor with color
+    - sprite.resize
+    - cache colors
+    - file dialog support for linux

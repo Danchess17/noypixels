@@ -7,16 +7,15 @@ void NewSpriteWindow::renderImGui(MainWindow& main)
 {
     ImGui::Begin("menuWindow newSpriteDialog", &is_open, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize);
     ImGui::Text("New sprite:");
-    ImGui::InputText("Enter name", name, 1024);
+    ImGui::InputText("Enter name", &name, ImGuiInputTextFlags_AutoSelectAll);
     ImGui::InputInt2("Enter sprite size", size);
 
-    if (ImGui::Button("Ok"))
+    if (ImGui::Button("Ok", ImVec2(100, 25)))
     {
         sprites.addSprite(main, name, size[0], size[1]);
         is_open = false;
     }
-    ImGui::SameLine();
-    if (ImGui::Button("Cancel"))
+    if (ImGui::Button("Cancel", ImVec2(100, 25)))
         is_open = false;
     ImGui::End();
 }

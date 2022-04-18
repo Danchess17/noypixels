@@ -3,9 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #include <imgui/imgui.h>
-#include <list>
-#include <memory>
-#include <tuple>
+#include <imgui/misc/cpp/imgui_stdlib.h>
 
 class Window
 {
@@ -106,8 +104,12 @@ private:
 class ColorWindow : public Window
 {
 public:
+    ColorWindow();
     virtual void renderImGui(MainWindow& main) override;
     virtual const char* winname() override { return "color picker"; }
+private:
+    u32 cache[12];
+    u32 current;
 };
 
 class SpritesWindow : public Window
@@ -115,7 +117,7 @@ class SpritesWindow : public Window
 public:
     SpritesWindow(Project& project);
     void updateProject(MainWindow& main);
-    void addSprite(MainWindow& main, const char* name, u32 w, u32 h);
+    void addSprite(MainWindow& main, const std::string& name, u32 w, u32 h);
     void closeSprite(class CanvasWindow* canv);
 
     virtual void renderImGui(MainWindow& main) override;
@@ -134,7 +136,7 @@ public:
     virtual const char* winname() override { return "new sprite"; }
 private:
     SpritesWindow& sprites;
-    char name[1024];
+    std::string name;
     int size[2];
 };
 
@@ -144,6 +146,10 @@ public:
     CanvasWindow(const std::string& name, Sprite& sprite);
     virtual ~CanvasWindow() override;
     
+    void updateDraw(u32& color);
+    void updateResizeState();
+    void updateTexture();
+    void resizeTexture();
     virtual void renderImGui(MainWindow& main) override;
     virtual const char* winname() override { return "canvas"; }
 private:
@@ -151,5 +157,15 @@ private:
     Canvas canvas;
     u32 texture;
     float zoom;
-    int frame;
+    float playtime;
+    bool play;
+
+    enum {
+        ResizeNone,
+        ResizeNS,
+        ResizeEW,
+        ResizeAll
+    };
+    
+    int resize;
 };

@@ -1,49 +1,50 @@
 #include <noypixel/noypixel.h>
 
-Canvas::Canvas(Sprite& sprite, u32 color) : sprite(sprite), pixels(new u32[width() * height()])
+Canvas::Canvas(Sprite& sprite, u32 color) : sprite(sprite), copy(sprite), frame(nullptr)
 {
-    ASSERT(pixels, "memory limit");
-
-    if (!sprite.nrFrames())
-    {
-        clear(color);
-        addFrame();
-    }
-    else openFrame(0);
-}
-
-Canvas::~Canvas()
-{
-    delete[] pixels;
+    if (!copy.nrFrames())
+        frame = &copy.addFrame(color);
+    else openFrame((u32)0);
 }
 
 void Canvas::openFrame(u32 n)
 {
-    frame = &sprite[n];
-    std::memcpy(pixels, frame->pixels, width() * height() * sizeof(u32));
+    frame = &copy[n];
 }
 
-void Canvas::saveFrame()
+void Canvas::openFrame(f32 time)
 {
-    std::memcpy(frame->pixels, pixels, width() * height() * sizeof(u32));
+    frame = &copy.getFrame(time);
+}
+
+void Canvas::save()
+{
+    sprite = copy;
 }
 
 void Canvas::addFrame()
 {
-    frame = &sprite.addFrame(pixels);
+    f32 time = frame ? frame->time : 1.0f;
+    frame = &copy.addFrame(frame->pixels);
+    frame->time = time;
+}
+
+void Canvas::resize(u32 neww, u32 newh)
+{
+    copy.resize(neww, newh);
 }
 
 void Canvas::clear(u32 color)
 {
     for (u32 i = 0; i < width() * height(); i++)
-        pixels[i] = color;
+        frame->pixels[i] = color;
 }
 
 void Canvas::setPixel(u32 x, u32 y, u32 color)
 {
     ASSERT(x < width() && y < height(), "bad coordinates");
 
-    u32* d = &pixels[width() * y + x];
+    u32* d = &frame->pixels[width() * y + x];
     u8 a0 = ((u8*)&color)[3];
     u8 a1 = ((u8*)d)[3];
     u8 a = (255 - a0) * a1 / 255;
@@ -58,5 +59,17 @@ void Canvas::setPixel(u32 x, u32 y, u32 color)
 u32 Canvas::getPixel(u32 x, u32 y)
 {
     ASSERT(x < width() && y < height(), "bad coordinates");
-    return pixels[width() * y + x];
+    return frame->pixels[width() * y + x];
+}
+
+float Canvas::frameTime() const
+{
+    float res = 0.0f;
+    for (auto& f : getFrames())
+    {
+        if (&f == frame)
+            break;
+        res += f.time;
+    }
+    return res;
 }
