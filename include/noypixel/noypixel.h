@@ -30,7 +30,11 @@ typedef double f64;
 #define ASSERT(x, msg)
 #endif
 
+#include "noypixel/log.h"
+
 #include "sprite.h"
 #include "canvas.h"
 #include "project.h"
 #include "serializer.h"
+
+#include "graphics.h"

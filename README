@@ -1,8 +1,11 @@
 dependencies:
     premake5            -- built in project
-    stbi+stbi_write     -- built in project
-    yaml-cpp            -- run "apt install libyaml-cpp-dev"
-
+    stb_image           -- built in project
+    imgui               -- built in project
+    yaml-cpp            -- run "apt install libyaml-cpp-dev" for ubuntu
+    sdl2                -- run "apt install libsdl2-dev" for ubuntu
+    opengl3             -- run "apt install libgl-dev" for ubuntu
+    
 build:
     dep/premake5 gmake && make config=release noypixels
 
