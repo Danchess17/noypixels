@@ -2,6 +2,8 @@
 #include <imgui/imgui.h>
 #include <imgui/impl/imgui_impl_opengl3.h>
 #include <imgui/impl/imgui_impl_sdl.h>
+#include <stb/stb_image.h>
+
 
 bool MainWindow::init = false;
 
@@ -26,6 +28,14 @@ MainWindow::MainWindow(const char* name, size_t w, size_t h)
 
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_MAXIMIZED);
     sdl_context = SDL_CreateWindow(name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, window_flags);
+    
+    int imw, imh, ch;
+    stbi_uc* logo = stbi_load("dep/arts/logo64.png", &imw, &imh, &ch, 0);
+    SDL_Surface* logo_s = SDL_CreateRGBSurfaceFrom(logo, imw, imh, ch * 8, ch * imw, 0xff, 0xff00, 0xff0000, 0xff000000);
+    SDL_SetWindowIcon(sdl_context, logo_s);
+    SDL_FreeSurface(logo_s);
+    stbi_image_free(logo);
+
     gl_context = SDL_GL_CreateContext(sdl_context);
     SDL_GL_MakeCurrent(sdl_context, gl_context);
     SDL_GL_SetSwapInterval(1);
@@ -48,11 +58,14 @@ MainWindow::MainWindow(const char* name, size_t w, size_t h)
     ImGui::StyleColorsClassic();
     ImGuiStyle& style = ImGui::GetStyle();
     style.WindowRounding =                  0.0f;
-    style.Colors[ImGuiCol_TitleBgActive] =  ImVec4(0.3f, 0.5f, 0.7f, 1.0f);
+    style.Colors[ImGuiCol_TitleBgActive] =  ImVec4(0.2f, 0.3f, 0.8f, 1.0f);
     style.Colors[ImGuiCol_MenuBarBg] =      ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
     style.Colors[ImGuiCol_TitleBg] =        ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
     style.Colors[ImGuiCol_WindowBg] =       ImVec4(0.3f, 0.3f, 0.3f, 1.0f);
     style.Colors[ImGuiCol_Border] =         ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
+    style.Colors[ImGuiCol_Button] =         ImVec4(0.4f, 0.8f, 0.2f, 0.4f);
+    style.Colors[ImGuiCol_ButtonHovered] =  ImVec4(0.4f, 0.8f, 0.2f, 0.6f);
+    style.Colors[ImGuiCol_ButtonActive] =   ImVec4(0.4f, 0.8f, 0.2f, 0.8f);
     style.Colors[ImGuiCol_Header] =         ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
 
     io.Fonts->AddFontFromFileTTF("dep/fonts/default.ttf", 16.0f);

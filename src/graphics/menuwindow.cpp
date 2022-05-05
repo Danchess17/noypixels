@@ -5,31 +5,30 @@ MenuWindow::MenuWindow(Project& project, Serializer& serializer) : project(proje
 
 void MenuWindow::renderImGui(MainWindow& main)
 {
-    char name[1024];
-
     if(ImGui::BeginMainMenuBar())
     {
         if (ImGui::BeginMenu("File"))
         {
             if (ImGui::MenuItem("New Project", "Ctrl+Shift+N"))
             {
-                serializer.deserialize(nullptr);
+                serializer.deserialize("");
                 main.getWindow<SpritesWindow>().updateProject(main);
             }
             if (ImGui::MenuItem("Load Project", "Ctrl+Shift+O"))
             {
-                FILE *f = popen("zenity --file-selection 2>/dev/null", "r");
-                fgets(name, 1024, f);
-                if (*name)
-                    *(name + strlen(name) - 1) = '\0';
-                if (!pclose(f))
+                auto name = fileDialog(false);
+                if (name)
                 {
-                    serializer.deserialize(name);
+                    serializer.deserialize(name.value().c_str());
                     main.getWindow<SpritesWindow>().updateProject(main);
                 }
             }
             if (ImGui::MenuItem("Save Project", "Ctrl+Shift+S"))
-                serializer.serialize("a.png", "a.json");
+            {
+                auto name = fileDialog(true);
+                if (name)
+                    serializer.serialize(name.value());
+            }
 
             ImGui::Separator();
             

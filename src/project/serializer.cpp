@@ -26,7 +26,7 @@ std::pair<u32, u32> SerializerImageBuffer::put(u32 w, u32 h, u32* pixels)
     return std::make_pair(x, hh);
 }
 
-void SerializerImageBuffer::flush(const char* file)
+void SerializerImageBuffer::flush(const std::string& file)
 {
     u32 h = 0;
     for (auto& i : lines)
@@ -45,7 +45,7 @@ void SerializerImageBuffer::flush(const char* file)
         h += i.h;
     }
 
-    stbi_write_png(file, image_width, h, sizeof(u32), data, sizeof(u32) * image_width);
+    stbi_write_png(file.c_str(), image_width, h, sizeof(u32), data, sizeof(u32) * image_width);
     lines.clear();
     delete[] data;
 }
@@ -74,8 +74,9 @@ SerializerImageBuffer::Line::~Line()
 Serializer::Serializer(Project& project) : project(project)
 { }
 
-void Serializer::serialize(const char* png, const char* json) const
+void Serializer::serialize(const std::string& json) const
 {
+    std::string png = json + ".png";
     u32 w = 0;
     for (auto& i : project)
         if (w < i.second.width() * i.second.nrFrames())
@@ -99,18 +100,18 @@ void Serializer::serialize(const char* png, const char* json) const
     im.flush(png);
 }
 
-void Serializer::deserialize(const char* json)
+void Serializer::deserialize(const std::string& json)
 {
     project.clear();
 
-    if (!json)
+    if (!json.size())
         return;
 
     YAML::Node data = YAML::LoadFile(json);
     SerializerImage im;
     int ch;
 
-    std::string png = data["spritesheet"].as<std::string>();
+    std::string png = json + ".png";
 
     im.data = (u32*)stbi_load(png.c_str(), (int*)&im.w, (int*)&im.h, &ch, 0);
     

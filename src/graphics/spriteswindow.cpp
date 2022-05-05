@@ -14,7 +14,7 @@ void SpritesWindow::updateProject(MainWindow& main)
         sprites.emplace_back(name, &sprite, false, nullptr);
 }
 
-void SpritesWindow::addSprite(MainWindow& main, const char* name, u32 w, u32 h)
+void SpritesWindow::addSprite(MainWindow& main, const std::string& name, u32 w, u32 h)
 {
     Sprite& s = project.newSprite(name, w, h);
     sprites.emplace_back(name, &s, true, &main.addWindow<CanvasWindow>(name, s));
@@ -37,7 +37,8 @@ void SpritesWindow::renderImGui(MainWindow& main)
     
     for (auto&[name, sprite, open, window] : sprites)
     {
-        if (ImGui::Checkbox(name.c_str(), &open))
+        ImGui::PushID(sprite);
+        if (ImGui::Checkbox("", &open))
             if (open)
                 window = &main.addWindow<CanvasWindow>(name, *sprite);
             else
@@ -45,9 +46,16 @@ void SpritesWindow::renderImGui(MainWindow& main)
                 window->remove();
                 window = nullptr;
             }
+        ImGui::PopID();
+        ImGui::SameLine();
+
+        // NOTE: name edit is not serialized yet
+        ImGui::PushID((size_t)sprite + 1);
+        ImGui::InputText("", &name);
+        ImGui::PopID();
     }
 
-    if (ImGui::Button("add"))
+    if (ImGui::Button("add", ImVec2(100, 25)))
         main.showWindow<NewSpriteWindow>();
 
     ImGui::End();
