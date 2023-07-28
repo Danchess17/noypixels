@@ -1,3 +1,8 @@
+# noypixels
+Кроссплатформенный редактор пиксельных спрайтов и анимаций
+
+![alt text](https://github.com/Danchess17/noypixels/blob/main/image_2023-07-28_13-19-15.png)
+
 Отличия checkpoint3 от checkpoint2:
 added windows support
 added animations edit
